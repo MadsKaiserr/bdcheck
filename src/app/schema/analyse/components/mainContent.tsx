@@ -6,9 +6,33 @@ import { useState } from "react";
 export default function MainContent() {
 
     const [urlInputs, setUrlInputs] = useState("");
+    const [results, setResults] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    function nextStep() {
+    async function startAnalyse() {
+        setLoading(true);
+        setResults([]);
         
+        // Splitter textarea ved linjeskift og fjerner tomme linjer
+        const urls = urlInputs.split("\n").map(u => u.trim()).filter(u => u !== "");
+
+        // Vi kører dem i sekvens (eller Promise.all hvis det skal gå stærkt)
+        const analysisPromises = urls.map(async (url) => {
+            try {
+                const res = await fetch("/api/schema", {
+                    method: "POST",
+                    body: JSON.stringify({ url }),
+                });
+                return await res.json();
+            } catch (err) {
+                return { url, error: "Netværksfejl" };
+            }
+        });
+
+        const data = await Promise.all(analysisPromises);
+        setResults(data);
+        console.log("Schema Markup Result", data)
+        setLoading(false);
     }
 
     return (
@@ -19,11 +43,11 @@ export default function MainContent() {
                     <div className="pagespeed__container">
                         <div className="main__input__container">
                             <label className="main__input__heading">URL'er der skal analyseres</label>
-                            <p className="main__input__note">Sepereres ved linjeskift</p>
+                            <p className="main__input__note">Separeres ved linjeskift</p>
                             <textarea className="pagespeed__output__field" required value={urlInputs} onChange={(e) => setUrlInputs(e.target.value)} />
                         </div>
                         <div className="pagespeed__output__cta__container">
-                            <button className="pagespeed__output__cta__primary" onClick={() => nextStep()}>Kør</button>
+                            <button className="pagespeed__output__cta__primary" onClick={() => startAnalyse()}>Kør</button>
                             <Link className="pagespeed__output__cta__secondary" href="/site-audit/indstillinger">Indstillinger</Link>
                         </div>
                     </div>
