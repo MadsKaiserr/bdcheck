@@ -289,8 +289,29 @@ body {
     justify-content: center;
     border-radius: 50%;
     margin: 0 auto;
-    margin-bottom: 50px;
-    margin-top: 20px;
+}
+
+.pagespeed__status__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 100px;
+    padding-top: 20px;
+    padding-bottom: 50px;;
+}
+
+.pagespeed__status__element {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pagespeed__status__performancescore__heading {
+    font-size: 12px;
+    opacity: 0.5;
+    font-weight: 500;
 }
 
 .pagespeed__status__performancescore__poor {

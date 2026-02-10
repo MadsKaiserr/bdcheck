@@ -28,13 +28,10 @@ export default function MainContent() {
 
             if (ignoredHeaders.includes(currentLine)) continue;
 
-            // NY TEST: Indeholder linjen bogstaver? (Så er det et Issue-navn)
             const hasLetters = /[a-zA-Z]/.test(currentLine);
 
             if (hasLetters && i + 1 < lines.length) {
                 const nextLine = lines[i + 1];
-                
-                // Vi leder efter det første tal på næste linje (Crawled)
                 const numberMatch = nextLine.match(/^([\d,.]+)/);
 
                 if (numberMatch) {
@@ -44,7 +41,7 @@ export default function MainContent() {
 
                     extractedIssues.push(`- ${count} ${issueName}`);
                     
-                    i++; // Hop over tal-linjen
+                    i++;
                 }
             }
         }

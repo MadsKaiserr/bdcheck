@@ -1,17 +1,16 @@
 import { Metadata } from "next";
-import Indstillinger from "./components/indstillinger";
-
-export const dynamic = 'force-dynamic';
+import MainContent from "./components/mainContent";
 
 export const metadata: Metadata = {
-  title: "Technical Audit Indstillinger | Bonzer",
+  title: "Taksonomi Analyse | Bonzer",
   description: "",
 };
 
-export default async function IndstillingerServer() {
+export default async function Analyse() {
+
     const owner = "MadsKaiserr";
     const repo = "bonzer_pagespeed";
-    const path = "content";
+    const path = "taksonomi";
     const token = process.env.GITHUB_TOKEN;
 
     const res = await fetch(
@@ -30,11 +29,9 @@ export default async function IndstillingerServer() {
     };
 
     const pagespeedData = await res.json();
-    const kategorier = pagespeedData.categories;
+    const categories = pagespeedData.categories;
 
     return (
-        <div className="main__container">
-            <Indstillinger kategorier={kategorier} />
-        </div>
+        <MainContent categories={categories} />
     );
 }

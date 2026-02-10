@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache"; // <--- Tilføj denne
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   try {
@@ -17,14 +17,10 @@ export async function POST(req: Request) {
 async function saveChanges(kategoriObject: any) {
   const owner = "MadsKaiserr";
   const repo = "bonzer_pagespeed";
-  const path = "content"; // <- din fil
+  const path = "content";
   const branch = "main";
 
   const token = process.env.GITHUB_TOKEN;
-
-  /* -------------------------------- */
-  /* 1. Hent eksisterende fil (SHA)   */
-  /* -------------------------------- */
 
   const getFile = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
@@ -40,26 +36,16 @@ async function saveChanges(kategoriObject: any) {
   if (!getFile.ok) {
     throw new Error("Kunne ikke hente fil SHA fra GitHub");
   }
-
   const fileData = await getFile.json();
-
   const sha = fileData.sha;
-
-  /* -------------------------------- */
-  /* 2. Lav nyt content               */
-  /* -------------------------------- */
-
   const newContent = {
     categories: kategoriObject,
   };
 
+  // Indsæt nye ændringer
   const encodedContent = Buffer.from(
     JSON.stringify(newContent, null, 2)
   ).toString("base64");
-
-  /* -------------------------------- */
-  /* 3. Upload ændringer              */
-  /* -------------------------------- */
 
   const updateFile = await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
