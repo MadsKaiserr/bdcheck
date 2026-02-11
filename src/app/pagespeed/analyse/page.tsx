@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default async function Analyse() {
 
     const res = await fetch(
-        "https://raw.githubusercontent.com/MadsKaiserr/bonzer_pagespeed/refs/heads/main/content",
+        "https://raw.githubusercontent.com/MadsKaiserr/bonzer_tech_tool/refs/heads/main/content",
         {
         cache: "no-store"
         }

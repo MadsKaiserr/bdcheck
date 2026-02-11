@@ -16,8 +16,8 @@ export async function POST(req: Request) {
 
 async function saveChanges(kategoriObject: any) {
   const owner = "MadsKaiserr";
-  const repo = "bonzer_pagespeed";
-  const path = "content";
+  const repo = "bonzer_tech_tool";
+  const path = "pagespeed";
   const branch = "main";
 
   const token = process.env.GITHUB_TOKEN;

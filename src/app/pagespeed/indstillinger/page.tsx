@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default async function IndstillingerServer() {
     const owner = "MadsKaiserr";
-    const repo = "bonzer_pagespeed";
-    const path = "content";
+    const repo = "bonzer_tech_tool";
+    const path = "pagespeed";
     const token = process.env.GITHUB_TOKEN;
 
     const res = await fetch(
