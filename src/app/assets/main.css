@@ -315,9 +315,9 @@ body {
 }
 
 .pagespeed__status__performancescore__poor {
-    background-color: var(--red)5a;
-    color: var(--red);
-    border-color: var(--red);
+    background-color: #ff33335a;
+    color: #ff3333;
+    border-color: #ff3333;
 }
 
 .pagespeed__status__performancescore__fair {
@@ -631,4 +631,45 @@ body {
     font-weight: 400;
     opacity: 0.5;
     padding-top: 6px;
+}
+
+.schema__output__container {
+    padding-top: 40px;
+}
+
+.schema__output__element {
+    padding: 20px 0;
+    border-top: 1px dashed var(--border);
+}
+
+.schema__output__element__heading {
+    font-size: 16px;
+    line-height: 120%;
+    font-weight: 600;
+}
+
+.schema__output__element__result__container {
+    padding-top: 12px;
+}
+
+.schema__output__element__result__p {
+    padding: 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.schemaspinner {
+  border: 2px solid rgba(255, 255, 255, 0.3); /* Lys kant */
+  border-top: 2px solid white;                /* Den “roterende” del */
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: schemaspin 0.7s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes schemaspin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

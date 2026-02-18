@@ -6,10 +6,11 @@ interface PagespeedProps {
   domain: string;
   pagespeedDataMobile: any;
   pagespeedDataDesktop: any;
-  kategorier: any
+  kategorier: any;
+  matches: any;
 }
 
-export default function Pagespeed({ kategorier, domain, pagespeedDataMobile, pagespeedDataDesktop }: PagespeedProps) {
+export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMobile, pagespeedDataDesktop }: PagespeedProps) {
 
     const [dataType, setDataType] = useState("mobile")
     const [currentPagespeedData, setCurrentPagespeedData] = useState(pagespeedDataMobile)

@@ -20,9 +20,8 @@ export default async function Analyse() {
     }
 
     const pagespeedData = await res.json();
-    const kategorier = pagespeedData.categories
 
     return (
-        <MainContent kategorier={kategorier} />
+        <MainContent kategorier={pagespeedData.categories} matches={pagespeedData.matches} />
     );
 }

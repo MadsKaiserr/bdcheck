@@ -30,11 +30,10 @@ export default async function IndstillingerServer() {
     };
 
     const pagespeedData = await res.json();
-    const kategorier = pagespeedData.categories;
 
     return (
         <div className="main__container">
-            <Indstillinger kategorier={kategorier} />
+            <Indstillinger kategorier={pagespeedData.categories} matches={pagespeedData.matches} />
         </div>
     );
 }

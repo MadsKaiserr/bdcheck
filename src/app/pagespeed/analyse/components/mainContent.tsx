@@ -25,7 +25,7 @@ interface PageSpeedData {
     }
 }
 
-export default function MainContent({kategorier}: any) {
+export default function MainContent({kategorier, matches}: any) {
 
     const hardData = false;
 
@@ -108,6 +108,7 @@ export default function MainContent({kategorier}: any) {
             {currentStep === 1 && pagespeedData && (
                 <Pagespeed 
                     kategorier={kategorier} 
+                    matches={matches} 
                     domain={domain} 
                     pagespeedDataMobile={pagespeedData.mobile} 
                     pagespeedDataDesktop={pagespeedData.desktop} 

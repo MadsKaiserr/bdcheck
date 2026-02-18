@@ -16,7 +16,6 @@ export default function MainContent() {
         // Splitter textarea ved linjeskift og fjerner tomme linjer
         const urls = urlInputs.split("\n").map(u => u.trim()).filter(u => u !== "");
 
-        // Vi kører dem i sekvens (eller Promise.all hvis det skal gå stærkt)
         const analysisPromises = urls.map(async (url) => {
             try {
                 const res = await fetch("/api/schema", {
@@ -31,32 +30,95 @@ export default function MainContent() {
 
         const data = await Promise.all(analysisPromises);
         setResults(data);
-        console.log("Schema Markup Result", data)
         setLoading(false);
     }
 
-    const ignoredTypes = ["SearchAction", "EntryPoint", "PropertyValueSpecification", "ReadAction", "ListItem"];
-    const generateWordOutput = () => {
-        if (results.length === 0) return "";
+    const ignoredTypes = [
+        "SearchAction",
+        "EntryPoint",
+        "PropertyValueSpecification",
+        "ReadAction",
+        "ListItem",
+        "Answer",
+        "Audience",
+        "GeoCoordinates",
+        "OpeningHoursSpecification",
+        "PostalAddress",
+        "Question"
+    ];
 
-        return results.map(res => {
+    const generateStructuredOutput = () => {
+        if (results.length === 0) {
+            return {
+            finalOutput: [],
+            data: []
+            };
+        }
+
+        const allTypesAcrossPages: string[] = [];
+
+        const data = results.map((res) => {
             if (res.error) {
-                return `URL: ${res.url}\nFejl: ${res.error}\n--------------------------`;
+            return {
+                url: res.url,
+                types: [],
+                error: res.error
+            };
             }
 
-            const filteredTypes = res.types.filter((type: string) => !ignoredTypes.includes(type));
+            const filteredTypes = (res.types || []).filter(
+            (type: string) => !ignoredTypes.includes(type)
+            );
 
-            if (filteredTypes.length === 0) {
-                return `URL: ${res.url}\nIngen relevante schema typer fundet.\n--------------------------`;
-            }
+            // Saml alle typer globalt
+            filteredTypes.forEach((type: string) => {
+            allTypesAcrossPages.push(type);
+            });
 
-            const typeList = filteredTypes.map((type: any) => `- ${type}`).join('\n');
-            
-            return `URL: ${res.url}\n${typeList}\n--------------------------`;
-        }).join('\n\n');
+            return {
+            url: res.url,
+            types: filteredTypes
+            };
+        });
+
+        // Fjern dubletter globalt
+        const finalOutput = [...new Set(allTypesAcrossPages)].sort();
+
+        return {
+            finalOutput,
+            data
+        };
     };
 
-    const finalOutput = generateWordOutput();
+    const structuredOutput = generateStructuredOutput();
+
+    const formatSchemaTypesForWord = (types: string[]) => {
+        if (!types || types.length === 0) return "";
+
+        let workingTypes = [...new Set(types)]; // Fjern dubletter
+
+        // 🔹 Regel 1: WebSite + WebPage → Website/Webpage
+        if (workingTypes.includes("WebSite") && workingTypes.includes("WebPage")) {
+            workingTypes = workingTypes.filter(
+            (t) => t !== "WebSite" && t !== "WebPage"
+            );
+            workingTypes.push("Website/Webpage");
+        }
+
+        // 🔹 Regel 2: Organization + Corporation → Organization/Corporation
+        if (workingTypes.includes("Organization") && workingTypes.includes("Corporation")) {
+            workingTypes = workingTypes.filter(
+            (t) => t !== "Organization" && t !== "Corporation"
+            );
+            workingTypes.push("Organization/Corporation");
+        }
+
+        // Sortér alfabetisk
+        workingTypes.sort();
+
+        // Returnér Word-venlig bullet liste
+        return workingTypes.map(type => `• ${type}`).join("\n");
+    };
 
     return (
         <div className="main__container">
@@ -70,8 +132,9 @@ export default function MainContent() {
                             <textarea className="pagespeed__output__field" required value={urlInputs} onChange={(e) => setUrlInputs(e.target.value)} />
                         </div>
                         <div className="pagespeed__output__cta__container">
-                            <button className="pagespeed__output__cta__primary" onClick={() => startAnalyse()}>Kør</button>
-                            <Link className="pagespeed__output__cta__secondary" href="/site-audit/indstillinger">Indstillinger</Link>
+                            <button className="pagespeed__output__cta__primary" onClick={() => startAnalyse()}>
+                                {loading ? <span className="schemaspinner"></span> : "Kør"}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -80,7 +143,7 @@ export default function MainContent() {
                     <div className="pagespeed__container">
                         <textarea 
                             className="pagespeed__output__field" 
-                            value={finalOutput} 
+                            value={formatSchemaTypesForWord(structuredOutput.finalOutput)}
                             placeholder=""
                             readOnly 
                             style={{ minHeight: '300px' }}
@@ -90,13 +153,27 @@ export default function MainContent() {
                             <button 
                                 className="pagespeed__output__cta__primary" 
                                 onClick={() => {
-                                    if (finalOutput) {
-                                        navigator.clipboard.writeText(finalOutput);
+                                    if (structuredOutput.finalOutput) {
+                                        navigator.clipboard.writeText(formatSchemaTypesForWord(structuredOutput.finalOutput));
                                     }
                                 }}
                             >
                                 Kopiér til Word
                             </button>
+                        </div>
+                        <div className="schema__output__container">
+                            {structuredOutput.data.map((item: any) => {
+                                return (
+                                    <li key={item.url} className="schema__output__element">
+                                        <p className="schema__output__element__heading">{item.url}</p>
+                                        <ul className="schema__output__element__result__container">
+                                            {item.types.map((itemResult: string) => {
+                                                return (<li key={"SchemaType-" + itemResult} className="schema__output__element__result__p">{itemResult}</li>)
+                                            })}
+                                        </ul>
+                                    </li>
+                                )
+                            })}
                         </div>
                     </div>
                 </div>
