@@ -44,7 +44,10 @@ export default function MainContent() {
         "GeoCoordinates",
         "OpeningHoursSpecification",
         "PostalAddress",
-        "Question"
+        "Question",
+        "PropertyValue",
+        "QuantitativeValue",
+        "Thing"
     ];
 
     const generateStructuredOutput = () => {
@@ -117,7 +120,7 @@ export default function MainContent() {
         workingTypes.sort();
 
         // Returnér Word-venlig bullet liste
-        return workingTypes.map(type => `• ${type}`).join("\n");
+        return workingTypes.map(type => `${type}`).join("\n");
     };
 
     return (
