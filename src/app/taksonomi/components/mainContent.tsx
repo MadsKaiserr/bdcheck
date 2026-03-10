@@ -1,5 +1,6 @@
 "use client"
 import { Metadata } from "next";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function Analyse({kategorier}: any) {
@@ -33,7 +34,10 @@ export default function Analyse({kategorier}: any) {
         <div className="main__container">
             <div className="platform__wrapper">
                 <div className="platform__element">
-                    <h1 className="pagespeed__heading">Taksonomi audit indhold</h1>
+                    <div className="platform__header__container">
+                        <h1 className="pagespeed__heading" style={{padding: "0"}}>Taksonomi issues</h1>
+                        <Link className="pagespeed__output__cta__secondary" href="/taksonomi/indstillinger">Indstillinger</Link>
+                    </div>
                     <ul className="pagespeed__container pagespeed__container__result">
                         {kategorier.map((kategori: any) => {
                             const isOpen = openCategories[kategori.slug] || false;

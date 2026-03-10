@@ -4,7 +4,7 @@ import Indstillinger from "./components/indstillinger";
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Technical Audit Indstillinger | Bonzer",
+  title: "Pagespeed Indstillinger | Bonzer",
   description: "",
 };
 

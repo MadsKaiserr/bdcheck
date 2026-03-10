@@ -1,13 +1,14 @@
 import { Metadata } from "next";
-import MainContent from "./components/mainContent";
+import Indstillinger from "./components/indstillinger.tsx";
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Taksonomi Analyse | Bonzer",
+  title: "Taksonomi Indstillinger | Bonzer",
   description: "",
 };
 
-export default async function Analyse() {
-
+export default async function IndstillingerServer() {
     const owner = "MadsKaiserr";
     const repo = "bonzer_tech_tool";
     const path = "taksonomi";
@@ -28,10 +29,11 @@ export default async function Analyse() {
         console.error("Kunne ikke hente data fra API", `https://api.github.com/repos/${owner}/${repo}/contents/${path}`)
     };
 
-    const pagespeedData = await res.json();
-    const categories = pagespeedData.categories;
+    const taksonomiData = await res.json();
 
     return (
-        <MainContent categories={categories} />
+        <div className="main__container">
+            <Indstillinger kategorier={taksonomiData.categories} />
+        </div>
     );
 }

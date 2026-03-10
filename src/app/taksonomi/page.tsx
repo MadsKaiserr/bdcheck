@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import MainContent from "./components/mainContent";
 
 export const metadata: Metadata = {
-  title: "Pagespeed Analyse | Bonzer",
+  title: "Taksonomi Analyse | Bonzer",
   description: "",
 };
 

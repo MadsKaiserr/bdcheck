@@ -26,7 +26,7 @@ a {
 }
 
 body {
-    background-color: var(--background);
+    background-color: var(--background) !important;
 }
 
 .main__container {
@@ -693,4 +693,11 @@ body {
 @keyframes schemaspin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.platform__header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
 }
