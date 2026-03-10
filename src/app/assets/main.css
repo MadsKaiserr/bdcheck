@@ -167,6 +167,27 @@ body {
     line-height: 140%;
 }
 
+.pagespeed__input__error__container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: .8;
+    padding-top: 14px;
+}
+
+.pagespeed__input__error__svg {
+    fill: var(--red);
+    width: 16px;
+    height: 16px;
+}
+
+.pagespeed__input__error {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--red);
+    padding-top: 4px;
+}
+
 .pagespeed__input__field {
     width: 100%;
     border-radius: 10px;

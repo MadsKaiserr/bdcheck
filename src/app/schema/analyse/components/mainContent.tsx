@@ -47,7 +47,13 @@ export default function MainContent() {
         "Question",
         "PropertyValue",
         "QuantitativeValue",
-        "Thing"
+        "Thing",
+        "Country",
+        "OfferCatalog",
+        "UnitPriceSpecification",
+        "MonetaryAmount",
+        "CategoryCodeSet",
+        "CategoryCode"
     ];
 
     const generateStructuredOutput = () => {

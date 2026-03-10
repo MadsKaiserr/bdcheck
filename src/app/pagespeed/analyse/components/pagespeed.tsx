@@ -61,18 +61,28 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
                 for (const issue of kategori.issues) {
                     if (currentPagespeedData.audits[issue.psi_id] && issue.trigger !== undefined) {
                         if (currentPagespeedData.audits[issue.psi_id].score < issue.trigger) {
-                            issuesToCheck.push(issue.id);
+                            if (issue.psi_id == "unused-css-rules") {
+                                if (currentPagespeedData.audits["unused-css-rules"].details.overallSavingsBytes > 100000) {
+                                    issuesToCheck.push(issue.id);
+                                }
+                            } else if (issue.psi_id == "cache-insight") {
+                                if (currentPagespeedData.audits["cache-insight"].details.debugData.wastedBytes > 100000) {
+                                    issuesToCheck.push(issue.id);
+                                }
+                            } else {
+                                issuesToCheck.push(issue.id);
+                            }
                         }
                     }
 
                     if (currentPagespeedData.audits["lcp-discovery-insight"]) {
-                        if (issue.psi_id == "lcp-discovery-fetchpriority" && currentPagespeedData.audits["lcp-discovery-insight"].score > 0) {
-                            if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.priorityHinted.value && currentPagespeedData.audits["lcp-discovery-insight"].score < issue.trigger) {
+                        if (issue.psi_id == "lcp-discovery-fetchpriority" && currentPagespeedData.audits["lcp-discovery-insight"].details.items.length > 0) {
+                            if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.priorityHinted.value) {
                                 issuesToCheck.push(issue.id);
                             }
                         }
-                        if (issue.psi_id == "lcp-discovery-eager" && currentPagespeedData.audits["lcp-discovery-insight"].score > 0) {
-                            if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.eagerlyLoaded.value && currentPagespeedData.audits["lcp-discovery-insight"].score < issue.trigger) {
+                        if (issue.psi_id == "lcp-discovery-eager" && currentPagespeedData.audits["lcp-discovery-insight"].details.items.length > 0) {
+                            if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.eagerlyLoaded.value) {
                                 issuesToCheck.push(issue.id);
                             }
                         }

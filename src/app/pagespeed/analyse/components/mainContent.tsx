@@ -36,63 +36,64 @@ export default function MainContent({kategorier, matches}: any) {
     const [loading, setLoading] = useState(false)
 
     async function lighthouseRun(domainToCrawl: string) {
-    setLoading(true);
-    const psi_token = process.env.NEXT_PUBLIC_PSI_TOKEN;
+        setLoading(true);
+        const psi_token = process.env.NEXT_PUBLIC_PSI_TOKEN;
 
-    const fetchPSI = async (strategy: "mobile" | "desktop") => {
-        const url = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${domainToCrawl}&key=${psi_token}&strategy=${strategy}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`${strategy} error: ${res.status}`);
-        return res.json();
-    };
-
-    try {
-        // Kør begge analyser samtidigt
-        const [mobileJson, desktopJson] = await Promise.all([
-            fetchPSI("mobile"),
-            fetchPSI("desktop")
-        ]);
-
-        const processResult = (json: any) => {
-            const lighthouse = json.lighthouseResult;
-            const metrics: LighthouseMetrics = {
-                "First Contentful Paint": lighthouse.audits['first-contentful-paint']?.displayValue,
-                "Speed Index": lighthouse.audits['speed-index']?.displayValue,
-                "Largest Contentful Paint": lighthouse.audits['largest-contentful-paint']?.displayValue,
-                "Total Blocking Time": lighthouse.audits['total-blocking-time']?.displayValue,
-                "Time To Interactive": lighthouse.audits['interactive']?.displayValue,
-            };
-
-            const performanceScore = lighthouse.categories?.performance?.score
-                ? Math.round(lighthouse.categories.performance.score * 100)
-                : undefined;
-
-            return {
-                pageId: json.id,
-                lighthouseMetrics: metrics,
-                performanceScore,
-                audits: lighthouse.audits,
-                auditRefs: lighthouse.categories.performance.auditRefs
-            };
+        const fetchPSI = async (strategy: "mobile" | "desktop") => {
+            const url = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${domainToCrawl}&key=${psi_token}&strategy=${strategy}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`${strategy} error: ${res.status}`);
+            return res.json();
         };
 
-        const pagespeedObject = {
-            mobile: processResult(mobileJson),
-            desktop: processResult(desktopJson),
-        };
+        try {
+            // Kør begge analyser samtidigt
+            const [mobileJson, desktopJson] = await Promise.all([
+                fetchPSI("mobile"),
+                fetchPSI("desktop")
+            ]);
 
-        setPagespeedData(pagespeedObject);
-        console.log("Pagespeed Data:", pagespeedObject);
-        setLoading(false);
+            const processResult = (json: any) => {
+                const lighthouse = json.lighthouseResult;
+                const metrics: LighthouseMetrics = {
+                    "First Contentful Paint": lighthouse.audits['first-contentful-paint']?.displayValue,
+                    "Speed Index": lighthouse.audits['speed-index']?.displayValue,
+                    "Largest Contentful Paint": lighthouse.audits['largest-contentful-paint']?.displayValue,
+                    "Total Blocking Time": lighthouse.audits['total-blocking-time']?.displayValue,
+                    "Time To Interactive": lighthouse.audits['interactive']?.displayValue,
+                };
 
-    } catch (err: any) {
-        console.error("Fetching PageSpeed Insights failed:", err);
-        setLoading(false);
+                const performanceScore = lighthouse.categories?.performance?.score
+                    ? Math.round(lighthouse.categories.performance.score * 100)
+                    : undefined;
+
+                return {
+                    pageId: json.id,
+                    lighthouseMetrics: metrics,
+                    performanceScore,
+                    audits: lighthouse.audits,
+                    auditRefs: lighthouse.categories.performance.auditRefs
+                };
+            };
+
+            const pagespeedObject = {
+                mobile: processResult(mobileJson),
+                desktop: processResult(desktopJson),
+            };
+
+            setPagespeedData(pagespeedObject);
+            console.log("Pagespeed Data:", pagespeedObject);
+            setLoading(false);
+
+        } catch (err: any) {
+            console.error("Fetching PageSpeed Insights failed:", err);
+            setLoading(false);
+        }
     }
-}
 
     const startAnalyse = async (domainValue: string) => {
         setDomain(domainValue)
+        console.log("Kører analyse på " + domainValue)
         try {
             await lighthouseRun(domainValue)
         } catch {
