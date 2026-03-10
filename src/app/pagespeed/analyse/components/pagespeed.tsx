@@ -169,6 +169,8 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
         setOpenCategories((prev) => ({ ...prev, [slug]: !prev[slug] }));
     };
 
+    const [issueSearch, setIssueSearch] = useState("")
+
     return (
         <div className="platform__wrapper">
             <div className="platform__element">
@@ -227,6 +229,7 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
                     </div>
                     {currentPagespeedData && 
                         <div className="pagespeed__diagnostics__wrapper">
+                            <input type="text" className="pagespeed__input__field" placeholder="Søg i issues..." value={issueSearch} onChange={(e) => setIssueSearch(e.target.value)} />
                             {(() => {
                                 if (!currentPagespeedData || !currentPagespeedData.audits) return null;
 
@@ -248,7 +251,7 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
                                 const weight = ref?.weight ?? 0;
 
                                 if (!groups[group]) groups[group] = [];
-                                groups[group].push({ ...audit, id, weight });
+                                    groups[group].push({ ...audit, id, weight });
                                 });
 
                                 // 3. Sorter hver gruppe efter impact/weight desc
@@ -285,6 +288,12 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
                                                 Object.values(psItem.metricSavings).some((value) => (value as number) > 0);
 
                                                 const isOpen = openItems.includes(psItem.id);
+
+                                                if (issueSearch !== "") {
+                                                    if (!psItem.title.replace(/`/g, "").toLowerCase().includes(issueSearch.toLowerCase())) {
+                                                        return;
+                                                    }
+                                                }
 
                                                 return (
                                                 <li className={`pagespeed__diagnostics__element ${isOpen ? "issueopen" : ""}`} key={psItem.id}>
