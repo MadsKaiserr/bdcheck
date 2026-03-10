@@ -81,7 +81,7 @@ export default function Analyse({kategorier}: any) {
                                     </div>
                                 </div>
 
-                                {isOpen || issueSearch !== "" && (
+                                {(isOpen || issueSearch !== "") && (
                                 <ul className="pagespeed__issues">
                                     {kategori.issues.map((issue: any) => {
                                     const checked = checkedIssues.includes(issue.id);
