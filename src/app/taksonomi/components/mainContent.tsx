@@ -30,6 +30,8 @@ export default function Analyse({kategorier}: any) {
         .join("\n");
     const outputText = introText + issuesText;
 
+    const [issueSearch, setIssueSearch] = useState("")
+
     return (
         <div className="main__container">
             <div className="platform__wrapper">
@@ -39,8 +41,15 @@ export default function Analyse({kategorier}: any) {
                         <Link className="pagespeed__output__cta__secondary" href="/taksonomi/indstillinger">Indstillinger</Link>
                     </div>
                     <ul className="pagespeed__container pagespeed__container__result">
+                        <input type="text" className="pagespeed__input__field" style={{marginTop: "16px", marginBottom: "16px"}} placeholder="Søg i issues..." value={issueSearch} onChange={(e) => setIssueSearch(e.target.value)} />
                         {kategorier.map((kategori: any) => {
                             const isOpen = openCategories[kategori.slug] || false;
+
+                            if (issueSearch !== "") {
+                                if (!kategori.issues.find((issue: any) => issue.issue.toLowerCase().includes(issueSearch.toLowerCase()))) {
+                                    return
+                                }
+                            }
 
                             return (
                             <li key={kategori.slug} className="pagespeed__wrapper">
@@ -52,7 +61,7 @@ export default function Analyse({kategorier}: any) {
                                             {kategori.issues.filter((issue: any) => checkedIssues.includes(issue.id)).length} valgte
                                         </span>
 
-                                        <span className={`pagespeed__chevron ${isOpen ? "open" : ""}`}>
+                                        <span className={`pagespeed__chevron ${isOpen || issueSearch !== "" ? "open" : ""}`}>
                                             <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 16 16"
@@ -72,10 +81,17 @@ export default function Analyse({kategorier}: any) {
                                     </div>
                                 </div>
 
-                                {isOpen && (
+                                {isOpen || issueSearch !== "" && (
                                 <ul className="pagespeed__issues">
                                     {kategori.issues.map((issue: any) => {
                                     const checked = checkedIssues.includes(issue.id);
+
+                                    if (issueSearch !== "") {
+                                        if (!issue.issue.toLowerCase().includes(issueSearch.toLowerCase())) {
+                                            return
+                                        }
+                                    }
+
                                     return (
                                         <li key={issue.id} className="pagespeed__issue__element">
                                             <label className="pagespeed__issue__element__checkbox__container">
