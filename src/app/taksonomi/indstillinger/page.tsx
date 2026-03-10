@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Indstillinger from "./components/indstillinger.tsx";
+import Indstillinger from "./components/indstillinger";
 
 export const dynamic = 'force-dynamic';
 
