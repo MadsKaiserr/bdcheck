@@ -76,12 +76,13 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
                     }
 
                     if (currentPagespeedData.audits["lcp-discovery-insight"]) {
-                        if (issue.psi_id == "lcp-discovery-fetchpriority" && currentPagespeedData.audits["lcp-discovery-insight"].score) {
+                        if (issue.psi_id == "lcp-discovery-fetchpriority" && typeof(currentPagespeedData.audits["lcp-discovery-insight"].score) == "number") {
+                            console.log("INSIDE")
                             if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.priorityHinted.value) {
                                 issuesToCheck.push(issue.id);
                             }
                         }
-                        if (issue.psi_id == "lcp-discovery-eager" && currentPagespeedData.audits["lcp-discovery-insight"].score) {
+                        if (issue.psi_id == "lcp-discovery-eager" && typeof(currentPagespeedData.audits["lcp-discovery-insight"].score) == "number") {
                             if (!currentPagespeedData.audits["lcp-discovery-insight"].details.items[0].items.eagerlyLoaded.value) {
                                 issuesToCheck.push(issue.id);
                             }
