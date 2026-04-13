@@ -29,6 +29,7 @@ export default function MainContent() {
         });
 
         const data = await Promise.all(analysisPromises);
+        console.log(data)
         setResults(data);
         setLoading(false);
     }

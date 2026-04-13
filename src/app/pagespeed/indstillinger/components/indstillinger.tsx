@@ -299,7 +299,7 @@ export default function Pagespeed({ kategorier, matches }: any) {
                     })}
                 </ul>
             </div>
-            <div className="platform__element">
+            {/* <div className="platform__element">
                 <h1 className="pagespeed__heading">Sammensætninger</h1>
                 <ul className="pagespeed__container pagespeed__settings">
                     {kategoriObject.map((kategori: any) => {
@@ -409,7 +409,7 @@ export default function Pagespeed({ kategorier, matches }: any) {
                         );
                     })}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -140,18 +140,17 @@ export default function Pagespeed({ kategorier, matches, domain, pagespeedDataMo
     if (mScore >= 70 && dScore >= 70) {
         assessment = "This is considered a result above expectations. This means, that the website meets the requirements for pagespeed";
     } else {
-        // Mobile under 70
         if (mScore < 50) {
             assessment = "This is considered a result significantly below expectations";
         } else if (mScore < 70) {
             assessment = "This is considered a result below expectations";
+        } else {
+            assessment = "This is considered a result below expectations";
         }
 
-        // Tilføj desktop-modifier hvis desktop er over 70
         if (dScore > 70) {
             assessment += ", especially since search engines prioritize good mobile performance.";
         } else {
-            // Punktum til sidst hvis modiferen ikke blev tilføjet
             assessment += ".";
         }
     }
